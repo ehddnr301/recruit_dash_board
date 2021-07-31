@@ -12,7 +12,7 @@ def get_df_n_fig(speciality):
     idxs = sim.get_item()
 
     map_df, my_recruit_df = get_dataframe(idxs, lat_lon_df)
-    print(my_recruit_df)
+
     fig = px.scatter_mapbox(map_df,
                             lat='lat',
                             lon='lon',

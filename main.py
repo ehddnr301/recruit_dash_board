@@ -5,6 +5,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
 from dash.dependencies import Input, Output, State
+from w2v_sim import W2VSimilarity
 
 
 speciality = ' '
@@ -76,35 +77,54 @@ app.layout = html.Div(
                         )
                     ]
                 )
-        #         html.Table(
-        #             style={'textAlign':'center'},
-        #             children=[
-        #             html.Thead(
-        #                 children=[
-        #                     html.Tr(
-        #                         id='tr',
-        #                         children=[
-        #                             html.Th(col) for col in init.columns
-        #                         ]
-        #                     )
-        #                 ]
-        #             ),
-        #             html.Tbody(
-        #                 id='tbody',
-        #                 children=[
-        #                     html.Tr(
-        #                         children=[
-        #                             html.Td(
-        #                                 style={'padding':'10px'},
-        #                                 children=[val]
-        #                             )  for val in values
-        #                         ] 
-        #                     ) 
-        #                     for values in init.values
-        #                 ]
-        #             )
-        #           ]
-        #         )
+            ]
+        ),
+
+
+        html.Div(
+            style={'width':'100%', 'display':'flex', 'flexDirection':'column', 'alignItems':'center', 'marginBottom': '20px', 'margin':'35px 0','borderTop':'1px dashed #ffa801', 'paddingTop':'20px'},
+            children=[
+                html.Div(
+                    style={'display':'flex', 'marginBottom':'10px', 'width':'50%'},
+                    children=[
+                        dcc.Input(
+                            style={'width': '90%', 'padding':'10px', 'borderRadius':'10px', 'marginRight':'15px'},
+                            id='ipt2',
+                            type='text',
+                            placeholder='활동소개를 아무렇게나 써주세요.'
+                        ),
+                        html.Button(
+                            id='btn2',
+                            children=['제출'],
+                            style={'color':'black', 'backgroundColor':'white', 'fontSize':'14px', 'padding':'5px', 'borderRadius':'5px', 'width':'50px'}
+                        )
+                    ]
+                ),
+                html.Div(
+                    id='my-div2'
+                )
+            ]
+        ),
+
+        html.Div(
+            style={'display':'flex', 'alginItems':'center', 'justifyContent': 'center', },
+            children=[
+                html.Div(
+                    style={"marginRight": "30px"},
+                    children=[
+                        dcc.Graph(id='fig2')
+                    ]
+                ),
+                html.Div(
+                    children=[
+                        dash_table.DataTable(
+                            style_cell={'textAlign':'center', 'backgroundColor':'black', 'color':'white', 'border':'1px solid white'},
+                            id='table2',
+                            columns=[{'name': i, 'id': f'{i}_2'} for i in init.columns],
+                            data= init.to_dict('records')
+                        )
+                    ]
+                )
             ]
         )
     ]
@@ -132,7 +152,6 @@ def update_output_div(n_clicks,input_value):
         mr_dict = my_recruit_df.to_dict('records')
 
         if fig:
-            print('hihi')
             return ('선택하신 활동분야는 "{}" 입니다.'.format(my_variable), fig, mr_dict)
     else:
         # _, fig = get_df_n_fig(' ')

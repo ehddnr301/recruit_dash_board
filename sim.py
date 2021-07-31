@@ -4,6 +4,7 @@ from sklearn.metrics.pairwise import cosine_similarity, euclidean_distances
 import glob
 from pandas.core.frame import DataFrame
 
+
 class Similarity():
     def __init__(
         self,
