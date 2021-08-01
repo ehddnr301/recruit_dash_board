@@ -1,14 +1,15 @@
 from fig import get_df_n_fig
+from fig2 import get_df_n_fig2
 import dash
 import dash_table
 import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
 from dash.dependencies import Input, Output, State
-from w2v_sim import W2VSimilarity
 
 
 speciality = ' '
+ipt_text = ' '
 
 stylesheets = [
     "https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css",
@@ -120,8 +121,8 @@ app.layout = html.Div(
                         dash_table.DataTable(
                             style_cell={'textAlign':'center', 'backgroundColor':'black', 'color':'white', 'border':'1px solid white'},
                             id='table2',
-                            columns=[{'name': i, 'id': f'{i}_2'} for i in init.columns],
-                            data= init.to_dict('records')
+                            columns=[{'name': f'{i} ', 'id': f'{i} '} for i in init.columns],
+                            data=[]
                         )
                     ]
                 )
@@ -148,20 +149,38 @@ def update_output_div(n_clicks,input_value):
         
         my_recruit_df, fig = get_df_n_fig(speciality)
 
-        # mr_json = my_recruit_df.to_json()
         mr_dict = my_recruit_df.to_dict('records')
-
+        # print('11111', mr_dict)
         if fig:
             return ('선택하신 활동분야는 "{}" 입니다.'.format(my_variable), fig, mr_dict)
     else:
-        # _, fig = get_df_n_fig(' ')
+        init = pd.DataFrame(columns=['recruit_id','info_address','lat','lon'], index=[i for i in range(10)])
+        init_dict = init.to_dict('records')
+        return ['안녕하세요', {}, init_dict]
 
+@app.callback(
+    [Output(component_id='my-div2', component_property='children'),
+    Output(component_id='fig2', component_property='figure'),
+    # Output(component_id='table', component_property='columns'),
+    Output(component_id='table2', component_property='data')],
 
-        # fig.update_layout(mapbox_style='carto-positron')
-        # fig.update_layout(margin={'r':0,'t':0,'l':0,'b':0})
-        # fig = dcc.Graph()
-        init = pd.DataFrame(columns=['recruit_id','info_address','lat','lon'], index=[i for i in range(10)]).fillna(0)
-        # init_json = init.values()
+    [Input('btn2', 'n_clicks')],
+    state=[State(component_id='ipt2', component_property='value')]
+)
+def update_output_div2(n_clicks,input_value):
+    global ipt_text
+    if input_value:
+        my_variable = input_value
+        ipt_text = str(input_value)
+        
+        my_recruit_df, fig = get_df_n_fig2(ipt_text)
+
+        mr_dict = my_recruit_df.to_dict('records')
+        # print('2222',mr_dict)
+        if fig:
+            return ('입력하신 내용은 "{}" 입니다.'.format(my_variable), fig, mr_dict)
+    else:
+        init = pd.DataFrame(columns=['recruit_id ','info_address ','lat ','lon '], index=[i for i in range(10)]).fillna(0)
         init_dict = init.to_dict('records')
         return ['안녕하세요', {}, init_dict]
 

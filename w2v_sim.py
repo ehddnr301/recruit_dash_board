@@ -1,6 +1,8 @@
 import re
 from gensim.models import Word2Vec
 import pandas as pd
+from sklearn.metrics.pairwise import cosine_similarity, euclidean_distances
+
 
 final_df = pd.read_csv('./cleaned_job_role.csv', sep=';')
 
@@ -15,7 +17,7 @@ class W2VSimilarity():
         self.model = None
         self.document_embedding_list = []
         self.sim = None
-        self.f = open('/content/gdrive/MyDrive/rocket_project/stop_words.txt', 'r')
+        self.f = open('./stop_words.txt', 'r')
 
     # input text 전처리
     def remove_sp_char(self,text):
@@ -55,7 +57,7 @@ class W2VSimilarity():
     
     # 모델만들기
     def create_model(self):
-        word2vec_model = Word2Vec(size=500, window=5, min_count=2, workers=-1)
+        word2vec_model = Word2Vec(vector_size=500, window=5, min_count=2, workers=-1)
         word2vec_model.build_vocab(self.corpus)
         word2vec_model.train(self.corpus, total_examples=word2vec_model.corpus_count, epochs=20)
         self.model = word2vec_model
@@ -67,12 +69,12 @@ class W2VSimilarity():
             doc2vec = None
             count = 0
             for word in line.split():
-                if word in self.model.wv.vocab:
+                if word in self.model.wv.index_to_key:
                     count += 1
                     if doc2vec is None:
-                        doc2vec = self.model[word]
+                        doc2vec = self.model.wv[word]
                     else:
-                        doc2vec = doc2vec + self.model[word]
+                        doc2vec = doc2vec + self.model.wv[word]
 
             if doc2vec is not None:
                 doc2vec = doc2vec / count
@@ -89,7 +91,6 @@ class W2VSimilarity():
 
     # 추천하기
     def recommendations(self):
-        
         rec = self.init_df[['recruit_id', 'job_role']]
         indices = pd.Series(self.df.index, index = self.df['recruit_id']).drop_duplicates()    
         idx = indices[self.id]
