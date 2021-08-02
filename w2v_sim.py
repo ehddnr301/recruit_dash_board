@@ -97,7 +97,7 @@ class W2VSimilarity():
 
         sim_scores = list(enumerate(self.sim[idx]))
         sim_scores = sorted(sim_scores, key = lambda x: x[1], reverse = True)
-        sim_scores = sim_scores[1:6]
+        sim_scores = sim_scores[1:14]
 
         book_indices = [i[0] for i in sim_scores]
 

@@ -15,8 +15,7 @@ stylesheets = [
     "https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css",
     "https://fonts.googleapis.com/css2?family=Open+Sans&display=swap",
 ]
-init = pd.DataFrame(columns=['recruit_id','info_address','lat','lon'])
-
+init = pd.DataFrame(columns=['공고번호','공고명','연봉정보','경력요구사항'], index=[i for i in range(14)])
 my_recruit_df, fig = get_df_n_fig(speciality)
 
 
@@ -27,7 +26,7 @@ app.layout = html.Div(
         "minHeight": "100vh",
         "backgroundColor": "#111111",
         "color": "white",
-        "fontFamily": "Open Sans, sans-serif",        
+        "fontFamily": "Open Sans, sans-serif"   
     },
     children=[
         html.Header(
@@ -60,7 +59,7 @@ app.layout = html.Div(
         ),
         
         html.Div(
-            style={'display':'flex', 'alginItems':'center', 'justifyContent': 'center'},
+            style={'display':'flex', 'alignItems':'center', 'justifyContent': 'center'},
             children=[
                 html.Div(
                     style={"marginRight": "30px"},
@@ -69,12 +68,20 @@ app.layout = html.Div(
                     ]
                 ),
                 html.Div(
+                    style={'display':'flex', 'alignItems':'center', 'justifyContent': 'center',},
                     children=[
                         dash_table.DataTable(
-                            style_cell={'textAlign':'center', 'backgroundColor':'black', 'color':'white', 'border':'1px solid white'},
                             id='table',
                             columns=[{'name': i, 'id':i} for i in init.columns],
-                            # data= init.to_dict('records')
+                            style_cell={
+                                'textAlign':'center',
+                                'backgroundColor':'black',
+                                'color':'white',
+                                'border':'1px solid white',
+                                'maxWidth': '300px',
+                                'overflow': 'hidden',
+                                'textOverflow': 'ellipsis',
+                            }
                         )
                     ]
                 )
@@ -108,7 +115,7 @@ app.layout = html.Div(
         ),
 
         html.Div(
-            style={'display':'flex', 'alginItems':'center', 'justifyContent': 'center', },
+            style={'display':'flex', 'alignItems':'center', 'justifyContent': 'center', },
             children=[
                 html.Div(
                     style={"marginRight": "30px"},
@@ -117,12 +124,21 @@ app.layout = html.Div(
                     ]
                 ),
                 html.Div(
+                    style={'display':'flex', 'alignItems':'center', 'justifyContent': 'center',},
                     children=[
                         dash_table.DataTable(
-                            style_cell={'textAlign':'center', 'backgroundColor':'black', 'color':'white', 'border':'1px solid white'},
                             id='table2',
                             columns=[{'name': f'{i} ', 'id': f'{i} '} for i in init.columns],
-                            data=[]
+                            style_cell={
+                                'textAlign':'center',
+                                'backgroundColor':'black',
+                                'color':'white',
+                                'border':'1px solid white',
+                                'maxWidth': '300px',
+                                'overflow': 'hidden',
+                                'textOverflow': 'ellipsis',
+                            }
+
                         )
                     ]
                 )
@@ -150,11 +166,10 @@ def update_output_div(n_clicks,input_value):
         my_recruit_df, fig = get_df_n_fig(speciality)
 
         mr_dict = my_recruit_df.to_dict('records')
-        # print('11111', mr_dict)
         if fig:
             return ('선택하신 활동분야는 "{}" 입니다.'.format(my_variable), fig, mr_dict)
     else:
-        init = pd.DataFrame(columns=['recruit_id','info_address','lat','lon'], index=[i for i in range(10)])
+        init = pd.DataFrame(columns=['recruit_id','info_address','lat','lon'], index=[i for i in range(14)])
         init_dict = init.to_dict('records')
         return ['안녕하세요', {}, init_dict]
 
@@ -176,11 +191,10 @@ def update_output_div2(n_clicks,input_value):
         my_recruit_df, fig = get_df_n_fig2(ipt_text)
 
         mr_dict = my_recruit_df.to_dict('records')
-        # print('2222',mr_dict)
         if fig:
             return ('입력하신 내용은 "{}" 입니다.'.format(my_variable), fig, mr_dict)
     else:
-        init = pd.DataFrame(columns=['recruit_id ','info_address ','lat ','lon '], index=[i for i in range(10)]).fillna(0)
+        init = pd.DataFrame(columns=['recruit_id ','info_address ','lat ','lon '], index=[i for i in range(14)])
         init_dict = init.to_dict('records')
         return ['안녕하세요', {}, init_dict]
 

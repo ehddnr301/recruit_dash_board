@@ -43,7 +43,7 @@ class Similarity():
         df = self.preprocess()
         sim = self.calculate_similarity(df)
         sim_df = pd.DataFrame(data=sim, index=df.index, columns= df.index)
-        return sim_df[self.id].sort_values(ascending=False)[1:10].index
+        return sim_df[self.id].sort_values(ascending=False)[1:14].index
 
 simirality_df = pd.read_csv("./recruit_specialty_matrix.csv", sep=';')
 
